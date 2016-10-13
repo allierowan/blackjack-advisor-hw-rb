@@ -119,5 +119,12 @@ def determine_best_move(card_one, card_two, dealer_card, strategy_hash)
   return best_move
 end
 
-
-puts determine_best_move("A", "7", "K", strategy_hash)
+# runs the game to prompt user for their card info and output best next move
+puts "Hello, my name is Jarvis, your personal BlackJack assistant."
+puts "Please enter the first card in your hand."
+puts "For facecards, you may either enter '10' or 'J', 'Q', or 'K'"
+first_player_card = gets.chomp.downcase
+puts "Thank you. Please enter the second card in your hand"
+second_player_card = gets.chomp.downcase
+puts "Thank you. Please enter the dealer's up-card"
+dealer_card = gets.chomp.downcase
