@@ -80,7 +80,7 @@ def clean_card_input(card)
 end
 
 # takes the user's cards and the dealer card and returns the best next move
-def determine_best_move(card_one, card_two, dealer_card)
+def determine_best_move(card_one, card_two, dealer_card, strategy_hash)
 
   int_card_one = clean_card_input(card_one)
   int_card_two = clean_card_input(card_two)
