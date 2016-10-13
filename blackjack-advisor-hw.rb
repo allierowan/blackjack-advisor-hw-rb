@@ -141,6 +141,8 @@ def determine_best_move(card_one, card_two, dealer_card, strategy_hash)
 
   if int_card_one == 0 || int_card_two == 0 || int_dealer_card == 0
     best_move = "invalid input"
+  elsif hand_type == "pair"
+    best_move = strategy_hash[hand_type][int_card_one][int_dealer_card]
   else
     best_move = strategy_hash[hand_type][player_hand_total][int_dealer_card]
   end
@@ -163,6 +165,8 @@ def instruct_player(move, hand_total)
       play_instruction = "Double if possible, otherwise hit"
     when "Ds"
       play_instruction = "Double if possible, otherwise stand"
+    when "P"
+      play_instruction = "You should split"
     else
       play_instruction = "Unkown"
     end
