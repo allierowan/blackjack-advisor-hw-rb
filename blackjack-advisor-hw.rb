@@ -59,3 +59,20 @@ def check_hand_type(card_one, card_two)
     hand_type = "hard"
   end
 end
+
+# takes the user's input and returns an output that is an int. if the user didn't pass something valid, 0 will be returned
+def clean_card_input(card)
+  int_card = 0
+  case card.downcase
+  when "a"
+    int_card = 1
+  when "k"
+    int_card = 10
+  when "q"
+    int_card = 10
+  when "j"
+    int_card = 10
+  else
+    int_card = card.to_i
+  end
+end
