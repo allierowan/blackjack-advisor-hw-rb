@@ -172,10 +172,12 @@ def instruct_player(move, hand_total)
     end
   end
 end
+
 # runs the game to prompt user for their card info and output best next move
 puts "Hello, my name is Jarvis, your personal BlackJack assistant."
 puts "Please enter the first card in your hand."
 puts "For facecards, you may either enter '10' or 'J', 'Q', or 'K'"
+
 valid = false
 until valid
   first_player_card = gets.chomp.downcase
@@ -184,6 +186,7 @@ until valid
 end
 
 puts "Thank you. Please enter the second card in your hand"
+
 valid = false
 until valid
   second_player_card = gets.chomp.downcase
@@ -192,6 +195,7 @@ until valid
 end
 
 puts "Thank you. Please enter the dealer's up-card"
+
 valid = false
 until valid
   dealer_card = gets.chomp.downcase
@@ -199,6 +203,7 @@ until valid
   puts "That is not a valid input value. Please try again" unless valid
 end
 
+# uses the info provided by the player to create a hash with some info about the player's hand
 user_hand_info = player_hand_info_hash(first_player_card, second_player_card)
 
 best_move = determine_best_move(first_player_card, second_player_card, dealer_card, strategy_hash)
