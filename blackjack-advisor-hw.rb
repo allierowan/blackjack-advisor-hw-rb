@@ -70,6 +70,29 @@ def valid_card?(input)
   valid_cards.include?(input)
 end
 
+# returns a hash with all the info we might want to know about a player's hand
+def player_hand_info_hash(card_one, card_two)
+  hand_info = {}
+  hand_info["first_card"] = card_one
+  hand_info["second_card"] = card_two
+
+  hand_type = ""
+  if card_one == card_two
+    hand_type = "pair"
+  elsif card_one == 1 || card_two == 1 || card_one.downcase == "a" || card_two.downcase == "a"
+    hand_type = "soft"
+  else
+    hand_type = "hard"
+  end
+
+  hand_info["hand_type"] = hand_type
+  hand_info["int_value_card_one"] = clean_card_input(card_one, hand_type)
+  hand_info["int_value_card_two"] = clean_card_input(card_two, hand_type)
+
+  hand_info["hand_total"] = clean_card_input(card_one, hand_type) + clean_card_input(card_two, hand_type)
+  return hand_info
+end
+
 # takes the user's input and hand_type and returns an output that is an int. if the user didn't pass something valid, 0 will be returned
 def clean_card_input(card, hand_type = "hard")
   int_card = 0
@@ -155,6 +178,7 @@ until valid
   valid = valid_card?(first_player_card)
   puts "That is not a valid input value. Please try again" unless valid
 end
+
 puts "Thank you. Please enter the second card in your hand"
 valid = false
 until valid
@@ -170,5 +194,10 @@ until valid
   valid = valid_card?(dealer_card)
   puts "That is not a valid input value. Please try again" unless valid
 end
+
+user_hand_info = player_hand_info_hash(first_player_card, second_player_card)
+
 best_move = determine_best_move(first_player_card, second_player_card, dealer_card, strategy_hash)
-puts "Great, your best next move is #{best_move}"
+
+player_instructions = instruct_player(best_move, user_hand_info["hand_total"])
+puts "Great, #{player_instructions}"
