@@ -47,3 +47,15 @@ pair_hand_strategy_hash = {
   "10,10" => {2=> "S", 3=> "S", 4=> "S", 5=> "S", 6=> "S", 7=> "S", 8=> "S", 9=> "S", 10=> "S", 1=> "S"},
   "A,A" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "P", 10=> "P", 1=> "P"}
 }
+
+# check to determine what type of hand we're dealing with, hard, soft, or pair
+def check_hand_type(card_one, card_two)
+  hand_type = ""
+  if card_one == card_two
+    hand_type = "pair"
+  elsif card_one == 1 OR card_two == 1
+    hand_type = "soft"
+  else
+    hand_type = "hard"
+  end
+end
