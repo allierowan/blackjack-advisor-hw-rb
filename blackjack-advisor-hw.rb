@@ -198,6 +198,7 @@ end
 user_hand_info = player_hand_info_hash(first_player_card, second_player_card)
 
 best_move = determine_best_move(first_player_card, second_player_card, dealer_card, strategy_hash)
+hand_total = user_hand_info["hand_total"]
+player_instructions = instruct_player(best_move, hand_total)
 
-player_instructions = instruct_player(best_move, user_hand_info["hand_total"])
-puts "Great, #{player_instructions}"
+puts "Great, your hand total is #{hand_total.to_s}. #{player_instructions}."
