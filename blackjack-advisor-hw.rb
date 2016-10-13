@@ -69,6 +69,7 @@ def valid_card?(input)
   valid_cards = ["j", "q", "k", "a", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
   valid_cards.include?(input)
 end
+
 # takes the user's input and hand_type and returns an output that is an int. if the user didn't pass something valid, 0 will be returned
 def clean_card_input(card, hand_type = "hard")
   int_card = 0
@@ -124,12 +125,50 @@ def determine_best_move(card_one, card_two, dealer_card, strategy_hash)
   return best_move
 end
 
+# translates the S, H, Dh, and Ds into english
+def instruct_player(move, hand_total)
+  play_instruction = ""
+  if hand_total == 21
+    play_instruction = "You won!"
+  else
+    case move
+    when "H"
+      play_instruction = "You should hit"
+    when "S"
+      play_instruction = "You should stand"
+    when "Dh"
+      play_instruction = "Double if possible, otherwise hit"
+    when "Ds"
+      play_instruction = "Double if possible, otherwise stand"
+    else
+      play_instruction = "Unkown"
+    end
+  end
+end
 # runs the game to prompt user for their card info and output best next move
 puts "Hello, my name is Jarvis, your personal BlackJack assistant."
 puts "Please enter the first card in your hand."
 puts "For facecards, you may either enter '10' or 'J', 'Q', or 'K'"
-first_player_card = gets.chomp.downcase
+valid = false
+until valid
+  first_player_card = gets.chomp.downcase
+  valid = valid_card?(first_player_card)
+  puts "That is not a valid input value. Please try again" unless valid
+end
 puts "Thank you. Please enter the second card in your hand"
-second_player_card = gets.chomp.downcase
+valid = false
+until valid
+  second_player_card = gets.chomp.downcase
+  valid = valid_card?(second_player_card)
+  puts "That is not a valid input value. Please try again" unless valid
+end
+
 puts "Thank you. Please enter the dealer's up-card"
-dealer_card = gets.chomp.downcase
+valid = false
+until valid
+  dealer_card = gets.chomp.downcase
+  valid = valid_card?(dealer_card)
+  puts "That is not a valid input value. Please try again" unless valid
+end
+best_move = determine_best_move(first_player_card, second_player_card, dealer_card, strategy_hash)
+puts "Great, your best next move is #{best_move}"
