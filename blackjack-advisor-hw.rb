@@ -72,10 +72,6 @@ end
 
 # returns a hash with all the info we might want to know about a player's hand
 def player_hand_info_hash(card_one, card_two)
-  hand_info = {}
-  hand_info["first_card"] = card_one
-  hand_info["second_card"] = card_two
-
   hand_type = ""
   if card_one == card_two
     hand_type = "pair"
@@ -85,11 +81,15 @@ def player_hand_info_hash(card_one, card_two)
     hand_type = "hard"
   end
 
-  hand_info["hand_type"] = hand_type
-  hand_info["int_value_card_one"] = clean_card_input(card_one, hand_type)
-  hand_info["int_value_card_two"] = clean_card_input(card_two, hand_type)
+  hand_info = {
+    "first_card" => card_one,
+    "second_card" => card_two,
+    "hand_type" => hand_type,
+    "int_value_card_one" => clean_card_input(card_one, hand_type),
+    "int_value_card_two" => clean_card_input(card_two, hand_type),
+    "hand_total" => clean_card_input(card_one, hand_type) + clean_card_input(card_two, hand_type)
+  }
 
-  hand_info["hand_total"] = clean_card_input(card_one, hand_type) + clean_card_input(card_two, hand_type)
   return hand_info
 end
 
