@@ -36,16 +36,16 @@ soft_hand_strategy_hash = {
 
 # the key is a string for this one
 pair_hand_strategy_hash = {
-  "2,2" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
-  "3,3" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "H", 10=> "H", 1=> "H"},
-  "4,4" => {2=> "H", 3=> "H", 4=> "P", 5=> "P", 6=> "P", 7=> "H", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
-  "5,5" => {2=> "Dh", 3=> "Dh", 4=> "Dh", 5=> "Dh", 6=> "Dh", 7=> "Dh", 8=> "Dh", 9=> "Dh", 10=> "H", 1=> "H"},
-  "6,6" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
-  "7,7" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "H", 10=> "S", 1=> "H"},
-  "8,8" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "P", 10=> "P", 1=> "P"},
-  "9,9" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "S", 8=> "P", 9=> "P", 10=> "S", 1=> "S"},
-  "10,10" => {2=> "S", 3=> "S", 4=> "S", 5=> "S", 6=> "S", 7=> "S", 8=> "S", 9=> "S", 10=> "S", 1=> "S"},
-  "A,A" => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "P", 10=> "P", 1=> "P"}
+  2 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
+  3 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "H", 10=> "H", 1=> "H"},
+  4 => {2=> "H", 3=> "H", 4=> "P", 5=> "P", 6=> "P", 7=> "H", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
+  5 => {2=> "Dh", 3=> "Dh", 4=> "Dh", 5=> "Dh", 6=> "Dh", 7=> "Dh", 8=> "Dh", 9=> "Dh", 10=> "H", 1=> "H"},
+  6 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "H", 9=> "H", 10=> "H", 1=> "H"},
+  7 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "H", 10=> "S", 1=> "H"},
+  8 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "P", 10=> "P", 1=> "P"},
+  9 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "S", 8=> "P", 9=> "P", 10=> "S", 1=> "S"},
+  10 => {2=> "S", 3=> "S", 4=> "S", 5=> "S", 6=> "S", 7=> "S", 8=> "S", 9=> "S", 10=> "S", 1=> "S"},
+  1 => {2=> "P", 3=> "P", 4=> "P", 5=> "P", 6=> "P", 7=> "P", 8=> "P", 9=> "P", 10=> "P", 1=> "P"}
 }
 
 # check to determine what type of hand we're dealing with, hard, soft, or pair
@@ -58,6 +58,7 @@ def check_hand_type(card_one, card_two)
   else
     hand_type = "hard"
   end
+  return hand_type
 end
 
 # takes the user's input and returns an output that is an int. if the user didn't pass something valid, 0 will be returned
@@ -75,4 +76,28 @@ def clean_card_input(card)
   else
     int_card = card.to_i
   end
+  return int_card
+end
+
+# takes the user's cards and the dealer card and returns the best next move
+def determine_best_move(card_one, card_two, dealer_card)
+
+  int_card_one = clean_card_input(card_one)
+  int_card_two = clean_card_input(card_two)
+  int_dealer_card = clean_card_input(dealer_card)
+  player_hand_total = int_card_one + int_card_two
+
+  hand_type = check_hand_type(int_card_one, int_card_two)
+  best_move = ""
+
+  if int_card_one == 0 || int_card_two == 0 || int_dealer_card == 0
+    best_move = "invalid input"
+  elsif hand_type == "soft"
+    best_move = soft_hand_strategy_hash[player_hand_total][int_dealer_card]
+  elsif hand_type == "hard"
+    best_move = hard_hand_strategy_hash[player_hand_total][int_dealer_card]
+  elsif hand_type == "pair"
+    best_move = pair_hand_strategy_hash[int_card_one][int_dealer_card]
+  end
+  return best_move
 end
