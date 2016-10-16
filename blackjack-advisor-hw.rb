@@ -53,123 +53,72 @@ strategy_hash =
 
 # check to determine what type of hand we're dealing with, hard, soft, or pair
 def check_hand_type(card_one, card_two)
-  hand_type = ""
   if card_one == card_two
-    hand_type = "pair"
-  elsif card_one == 1 || card_two == 1 || card_one.downcase == "a" || card_two.downcase == "a"
-    hand_type = "soft"
+    "pair"
+  elsif card_one.downcase == "a" || card_two.downcase == "a"
+    "soft"
   else
-    hand_type = "hard"
+    "hard"
   end
-  return hand_type
 end
 
 # checks to see if user input is valid
 def valid_card?(input)
-  valid_cards = ["j", "q", "k", "a", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+  valid_cards = ["j", "q", "k", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
   valid_cards.include?(input)
 end
 
 # returns a hash with all the info we might want to know about a player's hand
 def player_hand_info_hash(card_one, card_two)
-  hand_type = ""
-  if card_one == card_two
-    hand_type = "pair"
-  elsif card_one == 1 || card_two == 1 || card_one.downcase == "a" || card_two.downcase == "a"
-    hand_type = "soft"
-  else
-    hand_type = "hard"
-  end
 
   hand_info = {
     "first_card" => card_one,
     "second_card" => card_two,
-    "hand_type" => hand_type,
-    "int_value_card_one" => clean_card_input(card_one, hand_type),
-    "int_value_card_two" => clean_card_input(card_two, hand_type),
-    "hand_total" => clean_card_input(card_one, hand_type) + clean_card_input(card_two, hand_type)
+    "hand_type" => check_hand_type(card_one, card_two),
+    "int_value_card_one" => clean_card_input(card_one),
+    "int_value_card_two" => clean_card_input(card_two),
+    "hand_total" => clean_card_input(card_one) + clean_card_input(card_two)
   }
 
-  return hand_info
 end
 
 # takes the user's input and hand_type and returns an output that is an int. if the user didn't pass something valid, 0 will be returned
-def clean_card_input(card, hand_type = "hard")
-  int_card = 0
-  if hand_type == "soft"
-    case card.downcase
-    when "a"
-      int_card = 11
-    when "k"
-      int_card = 10
-    when "q"
-      int_card = 10
-    when "j"
-      int_card = 10
-    else
-      int_card = card.to_i
-    end
+def clean_card_input(card)
+  values_hash = {"a" => 11, "k" => 10, "q" => 10, "j"=>10}
+  if values_hash[card]
+    values_hash[card]
   else
-    case card.downcase
-    when "a"
-      int_card = 1
-    when "k"
-      int_card = 10
-    when "q"
-      int_card = 10
-    when "j"
-      int_card = 10
-    else
-      int_card = card.to_i
-    end
+    card.to_i
   end
-  return int_card
 end
 
 # takes the user's cards and the dealer card and returns the best next move
 def determine_best_move(card_one, card_two, dealer_card, strategy_hash)
 
   hand_type = check_hand_type(card_one, card_two)
-
-  int_card_one = clean_card_input(card_one, hand_type)
-  int_card_two = clean_card_input(card_two, hand_type)
   int_dealer_card = clean_card_input(dealer_card)
+  player_hand_total = clean_card_input(card_one) + clean_card_input(card_two)
 
-  player_hand_total = int_card_one + int_card_two
-
-  best_move = ""
-
-  if int_card_one == 0 || int_card_two == 0 || int_dealer_card == 0
-    best_move = "invalid input"
+  if card_one == 0.0 || card_two == 0.0 || dealer_card == 0.0
+    "invalid input"
   elsif hand_type == "pair"
-    best_move = strategy_hash[hand_type][int_card_one][int_dealer_card]
+    strategy_hash[hand_type][int_card_one][int_dealer_card]
   else
-    best_move = strategy_hash[hand_type][player_hand_total][int_dealer_card]
+    strategy_hash[hand_type][player_hand_total][int_dealer_card]
   end
 
-  return best_move
 end
 
 # translates the S, H, Dh, and Ds into english
 def instruct_player(move, hand_total)
-  play_instruction = ""
+  play_instruction = {"H" => "You should hit", "S" => "You should stand", "Dh" => "Double if possible, otherwise hit",
+    "Ds" => "Double if possible, otherwise stand" , "P" => "You should split"}
   if hand_total == 21
-    play_instruction = "You won!"
+    "You won!"
+  elsif play_instruction[move]
+    play_instruction[move]
   else
-    case move
-    when "H"
-      play_instruction = "You should hit"
-    when "S"
-      play_instruction = "You should stand"
-    when "Dh"
-      play_instruction = "Double if possible, otherwise hit"
-    when "Ds"
-      play_instruction = "Double if possible, otherwise stand"
-    when "P"
-      play_instruction = "You should split"
-    else
-      play_instruction = "Unkown"
-    end
+    "Unkown"
   end
 end
 
